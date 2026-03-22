@@ -595,7 +595,15 @@ function HomeInner() {
             borderRadius: 6, padding: '5px 12px',
             fontFamily: 'var(--ic-font-mono)', fontSize: 11,
             color: 'var(--ic-muted)', cursor: 'pointer',
-          }}>📌 dashboard</button>
+          }}>📌 dashboard
+          </button>
+          <button onClick={() => router.push('/status')} style={{
+            background: 'none', border: '1px solid var(--ic-border)',
+            borderRadius: 6, padding: '5px 12px',
+            fontFamily: 'var(--ic-font-mono)', fontSize: 11,
+            color: 'var(--ic-muted)', cursor: 'pointer',
+          }}>⚡ status
+          </button>
           {lastProvider && (
             <div style={{
               display: 'flex', alignItems: 'center', gap: 6,
@@ -641,8 +649,11 @@ function HomeInner() {
               {(['data', 'history'] as SidebarTab[]).map(tab => (
                 <button key={tab} onClick={() => setSidebarTab(tab)} style={{
                   flex: 1, background: 'none',
+                  borderTop: 'none',
+                  borderLeft: 'none',
+                  borderRight: 'none',
                   borderBottom: `2px solid ${sidebarTab === tab ? 'var(--ic-accent)' : 'transparent'}`,
-                  border: 'none', padding: '10px 0',
+                  padding: '10px 0',
                   fontFamily: 'var(--ic-font-mono)', fontSize: 11,
                   color: sidebarTab === tab ? 'var(--ic-accent)' : 'var(--ic-muted)',
                   cursor: 'pointer', transition: 'color 0.15s',
