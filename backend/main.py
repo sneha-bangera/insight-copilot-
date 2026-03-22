@@ -1,8 +1,12 @@
 
+
 # from fastapi import FastAPI, HTTPException, UploadFile, File, Query
 # from fastapi.middleware.cors import CORSMiddleware
+# from fastapi.responses import StreamingResponse
 # from pydantic import BaseModel
 # from contextlib import asynccontextmanager
+# from typing import Any
+# import io
 
 # from ai_pipeline import run_pipeline
 # from session_store import get_history, add_to_history, clear_history
@@ -10,14 +14,16 @@
 # from table_manager import upload_csv, list_tables, drop_table, suggest_joins
 # import cache as query_cache
 # import history_store as hs
+# from exporter import to_excel, to_pdf
+# from explainer import explain_sql
 
 
 # @asynccontextmanager
 # async def lifespan(app: FastAPI):
-#     hs.init_db()          # create SQLite tables on startup
+#     hs.init_db()
 #     yield
 
-# app = FastAPI(title="Insight Copilot API", version="4.0.0", lifespan=lifespan)
+# app = FastAPI(title="Insight Copilot API", version="5.0.0", lifespan=lifespan)
 
 # app.add_middleware(
 #     CORSMiddleware,
@@ -38,13 +44,23 @@
 # class ClearRequest(BaseModel):
 #     session_id: str = "default"
 
+# class ExportRequest(BaseModel):
+#     question: str
+#     summary:  str
+#     sql:      str
+#     columns:  list[str]
+#     rows:     list[dict[str, Any]]
+
+# class ExplainRequest(BaseModel):
+#     sql: str
+
 
 # # ─────────────────────────────────────────
 # # Core routes
 # # ─────────────────────────────────────────
 # @app.get("/health")
 # def health():
-#     return {"status": "ok", "version": "4.0.0"}
+#     return {"status": "ok", "version": "5.0.0"}
 
 
 # @app.get("/api/status")
@@ -80,12 +96,9 @@
 #         history = get_history(req.session_id)
 #         result  = run_pipeline(question, history)
 #         add_to_history(req.session_id, question, result)
-
-#         # Persist to SQLite history (only non-cached successful results)
 #         if result.get("success") and not result.get("from_cache"):
 #             entry_id = hs.save(req.session_id, result)
 #             result["history_id"] = entry_id
-
 #         return result
 #     except RuntimeError as e:
 #         raise HTTPException(status_code=503, detail={"error": "providers_unavailable", "message": str(e)})
@@ -101,6 +114,57 @@
 
 
 # # ─────────────────────────────────────────
+# # Export routes
+# # ─────────────────────────────────────────
+# @app.post("/api/export/excel")
+# def export_excel(req: ExportRequest):
+#     try:
+#         xlsx_bytes = to_excel(req.question, req.summary, req.columns, req.rows)
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail={"error": "export_failed", "message": str(e)})
+
+#     filename = _safe_filename(req.question) + ".xlsx"
+#     return StreamingResponse(
+#         io.BytesIO(xlsx_bytes),
+#         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+#         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+#     )
+
+
+# @app.post("/api/export/pdf")
+# def export_pdf(req: ExportRequest):
+#     try:
+#         pdf_bytes = to_pdf(req.question, req.summary, req.sql, req.columns, req.rows)
+#     except ImportError as e:
+#         raise HTTPException(status_code=500, detail={"error": "missing_dependency", "message": str(e)})
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail={"error": "export_failed", "message": str(e)})
+
+#     filename = _safe_filename(req.question) + ".pdf"
+#     return StreamingResponse(
+#         io.BytesIO(pdf_bytes),
+#         media_type="application/pdf",
+#         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+#     )
+
+
+# # ─────────────────────────────────────────
+# # Explain route
+# # ─────────────────────────────────────────
+# @app.post("/api/explain")
+# def explain(req: ExplainRequest):
+#     if not req.sql or not req.sql.strip():
+#         raise HTTPException(status_code=400, detail={"error": "no_sql", "message": "No SQL provided."})
+#     try:
+#         explanation = explain_sql(req.sql)
+#         return {"explanation": explanation}
+#     except RuntimeError as e:
+#         raise HTTPException(status_code=503, detail={"error": "providers_unavailable", "message": str(e)})
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail={"error": "explain_failed", "message": str(e)})
+
+
+# # ─────────────────────────────────────────
 # # History routes
 # # ─────────────────────────────────────────
 # @app.get("/api/history")
@@ -110,10 +174,7 @@
 #     offset:          int  = Query(default=0,   ge=0),
 #     bookmarked_only: bool = Query(default=False),
 # ):
-#     return {
-#         "entries": hs.get_history(session_id, limit, offset, bookmarked_only),
-#         "stats":   hs.get_stats(session_id),
-#     }
+#     return {"entries": hs.get_history(session_id, limit, offset, bookmarked_only), "stats": hs.get_stats(session_id)}
 
 
 # @app.post("/api/history/{entry_id}/bookmark")
@@ -139,12 +200,8 @@
 #     return {"deleted": entry_id}
 
 
-# # ─────────────────────────────────────────
-# # Dashboard route
-# # ─────────────────────────────────────────
 # @app.get("/api/dashboard")
 # def dashboard():
-#     """Returns all pinned queries for the dashboard page."""
 #     return {"pinned": hs.get_pinned()}
 
 
@@ -189,9 +246,6 @@
 #         raise HTTPException(status_code=500, detail={"error": "internal_error", "message": str(e)})
 
 
-# # ─────────────────────────────────────────
-# # Cache management
-# # ─────────────────────────────────────────
 # @app.get("/api/cache-stats")
 # def cache_stats():
 #     return query_cache.get_stats()
@@ -200,6 +254,15 @@
 # def cache_clear():
 #     query_cache.invalidate_all()
 #     return {"status": "cache cleared"}
+
+
+# # ─────────────────────────────────────────
+# # Helpers
+# # ─────────────────────────────────────────
+# def _safe_filename(question: str, max_len: int = 40) -> str:
+#     import re
+#     name = re.sub(r"[^a-z0-9]+", "_", question.lower().strip())[:max_len].strip("_")
+#     return name or "insight_copilot_export"
 
 
 from fastapi import FastAPI, HTTPException, UploadFile, File, Query
@@ -218,14 +281,18 @@ import cache as query_cache
 import history_store as hs
 from exporter import to_excel, to_pdf
 from explainer import explain_sql
+from seed_prod import seed_if_empty
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Runs on startup — seeds DB and inits history SQLite
+    seed_if_empty()
     hs.init_db()
     yield
 
-app = FastAPI(title="Insight Copilot API", version="5.0.0", lifespan=lifespan)
+
+app = FastAPI(title="Insight Copilot API", version="7.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -262,7 +329,7 @@ class ExplainRequest(BaseModel):
 # ─────────────────────────────────────────
 @app.get("/health")
 def health():
-    return {"status": "ok", "version": "5.0.0"}
+    return {"status": "ok", "version": "7.0.0"}
 
 
 @app.get("/api/status")
@@ -324,7 +391,6 @@ def export_excel(req: ExportRequest):
         xlsx_bytes = to_excel(req.question, req.summary, req.columns, req.rows)
     except Exception as e:
         raise HTTPException(status_code=500, detail={"error": "export_failed", "message": str(e)})
-
     filename = _safe_filename(req.question) + ".xlsx"
     return StreamingResponse(
         io.BytesIO(xlsx_bytes),
@@ -341,7 +407,6 @@ def export_pdf(req: ExportRequest):
         raise HTTPException(status_code=500, detail={"error": "missing_dependency", "message": str(e)})
     except Exception as e:
         raise HTTPException(status_code=500, detail={"error": "export_failed", "message": str(e)})
-
     filename = _safe_filename(req.question) + ".pdf"
     return StreamingResponse(
         io.BytesIO(pdf_bytes),

@@ -1,8 +1,12 @@
 .env*
 /venv
+/.env
+/venv/
+.env
 /__pycache__/
 *.pyc
 /instance
 /coverage
 *.log
 /data/samples.duckdb
+/data/history.db
