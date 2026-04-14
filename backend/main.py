@@ -292,7 +292,11 @@ async def lifespan(app: FastAPI):
     yield
 
 
+from prometheus_fastapi_instrumentator import Instrumentator
+
 app = FastAPI(title="Insight Copilot API", version="7.0.0", lifespan=lifespan)
+
+Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
     CORSMiddleware,
