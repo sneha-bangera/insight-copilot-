@@ -13,13 +13,13 @@ def test_health():
     assert response.status_code == 200
 
 def test_status():
-    response = client.get("/status")
+    response = client.get("/api/status")
     assert response.status_code == 200
 
 def test_tables_endpoint():
-    response = client.get("/tables")
+    response = client.get("/api/tables")
     assert response.status_code == 200
 
 def test_history_endpoint():
-    response = client.get("/history")
+    response = client.get("/api/history")
     assert response.status_code == 200
