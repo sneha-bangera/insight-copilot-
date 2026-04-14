@@ -3,6 +3,10 @@ import os
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "data", "sample.duckdb")
 
+# to run
+#docker-compose build
+#docker-compose up
+#docker-compose down
 
 def get_schema_context() -> str:
     conn = duckdb.connect(DB_PATH, read_only=True)

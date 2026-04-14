@@ -1,9 +1,13 @@
 import duckdb
 import os
+from dotenv import load_dotenv
 import pandas as pd
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "data", "sample.duckdb")
+load_dotenv()
 
+# DB_PATH = os.path.join(os.path.dirname(__file__), "data", "sample.duckdb")
+# DB_PATH = os.getenv("DATA_PATH")
+DB_PATH = os.getenv("DATA_PATH", "/data/sample.duckdb")
 
 def execute_query(sql: str) -> dict:
     conn = duckdb.connect(DB_PATH, read_only=True)

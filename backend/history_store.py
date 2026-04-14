@@ -17,8 +17,13 @@ import json
 import time
 import os
 from typing import Optional
+import os
+from dotenv import load_dotenv
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "data", "history.db")
+load_dotenv()
+
+# DB_PATH = os.path.join(os.path.dirname(__file__), "data", "history.db")
+DB_PATH = os.getenv("HISTORY_DB_PATH", "/data/history.db")
 
 
 def _get_conn() -> sqlite3.Connection:
