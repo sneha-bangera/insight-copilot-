@@ -16,22 +16,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ─────────────────────────────────────────
-# Config — tweak these as needed
-# ─────────────────────────────────────────
+
 COOLDOWN_SECONDS    = 60   # seconds a provider stays unhealthy after a 429
 MAX_PROVIDER_TRIES  = 3    # max providers to attempt per request
 RATE_LIMIT_WINDOW   = 60   # sliding window in seconds
 RATE_LIMIT_MAX_REQ  = 10   # max requests per session per window
 
 
-# ─────────────────────────────────────────
-# Provider dataclass
-# ─────────────────────────────────────────
+
 @dataclass
 class Provider:
     name: str
-    client_type: str      # "groq" | "gemini"
+    client_type: str     
     model: str
     api_key_env: str
     healthy: bool = True
@@ -71,9 +67,6 @@ class Provider:
         }
 
 
-# ─────────────────────────────────────────
-# Provider registry
-# ─────────────────────────────────────────
 _PROVIDERS: list[Provider] = [
     Provider(
         name="Groq",
@@ -89,12 +82,8 @@ _PROVIDERS: list[Provider] = [
     ),
 ]
 
-_current_index: int = 0   # round-robin pointer
+_current_index: int = 0  
 
-
-# ─────────────────────────────────────────
-# Rate limiter  (sliding window, per session)
-# ─────────────────────────────────────────
 _rate_store: dict[str, deque] = {}
 
 
@@ -137,9 +126,7 @@ def get_rate_limit_info(session_id: str) -> dict:
     }
 
 
-# ─────────────────────────────────────────
-# Lazy client factory
-# ─────────────────────────────────────────
+
 _client_cache: dict[str, object] = {}
 
 
@@ -171,9 +158,6 @@ def _get_client(provider: Provider):
     return client
 
 
-# ─────────────────────────────────────────
-# Single-provider call
-# ─────────────────────────────────────────
 def _call_provider(provider: Provider, prompt: str) -> str:
     client = _get_client(provider)
 
@@ -196,9 +180,7 @@ def _call_provider(provider: Provider, prompt: str) -> str:
     raise ValueError(f"Unknown client_type: {provider.client_type}")
 
 
-# ─────────────────────────────────────────
-# Public API
-# ─────────────────────────────────────────
+
 def call_llm(prompt: str) -> tuple[str, str]:
     """
     Round-robin call with automatic failover.

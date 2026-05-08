@@ -38,7 +38,6 @@ def generate(
         if pd.api.types.is_numeric_dtype(df[c])
     ]
 
-    # ── Filter by a specific value from the results ─────────────────────
     for col in text_cols[:2]:
         unique_vals = df[col].dropna().unique()
         if 2 <= len(unique_vals) <= 10:
@@ -57,7 +56,6 @@ def generate(
                     )
             break
 
-    # ── Sort differently ─────────────────────────────────────────────────
     if numeric_cols:
         num_col = numeric_cols[0]
         if "sort" not in q_lower and "order" not in q_lower:
@@ -66,7 +64,6 @@ def generate(
             else:
                 suggestions.append(f"Sort by lowest {num_col}")
 
-    # ── Drill down by time ───────────────────────────────────────────────
     date_hints = ["date", "month", "year", "quarter", "week", "period"]
     has_date = any(any(h in c.lower() for h in date_hints) for c in columns)
     if has_date and "month" not in q_lower:
@@ -74,15 +71,12 @@ def generate(
     elif has_date and "year" not in q_lower:
         suggestions.append("Show the yearly trend instead")
 
-    # ── Percentage / share ───────────────────────────────────────────────
     if numeric_cols and "percent" not in q_lower and "%" not in q_lower:
         suggestions.append(f"Show each row as a % of total")
 
-    # ── Add average ──────────────────────────────────────────────────────
     if numeric_cols and "average" not in q_lower and "avg" not in q_lower:
         suggestions.append(f"What is the average {numeric_cols[0]}?")
 
-    # ── Deduplicate and cap ──────────────────────────────────────────────
     seen: set[str] = set()
     unique: list[str] = []
     for s in suggestions:

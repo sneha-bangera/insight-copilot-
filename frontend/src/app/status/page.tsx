@@ -8,7 +8,6 @@ const SESSION_ID = typeof window !== 'undefined'
   : 'default'
 const REFRESH_INTERVAL = 30_000   // 30 seconds
 
-// ─── Types ───────────────────────────────────────────────────────────────────
 
 interface ProviderInfo {
   name:                       string
@@ -51,7 +50,6 @@ interface StatusData {
   }
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
@@ -179,7 +177,7 @@ function ProviderCard({ provider, isNext }: { provider: ProviderInfo; isNext: bo
   )
 }
 
-// ─── Main page ────────────────────────────────────────────────────────────────
+
 
 export default function StatusPage() {
   const router    = useRouter()
@@ -320,7 +318,6 @@ export default function StatusPage() {
         {data && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
 
-            {/* ── LLM Providers ───────────────────────────────────────── */}
             <section>
               <SectionTitle>LLM Providers — Round-Robin Router</SectionTitle>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 16 }}>
@@ -341,7 +338,7 @@ export default function StatusPage() {
               </div>
             </section>
 
-            {/* ── Rate Limiter + Cache + History in a row ─────────────── */}
+            {/*  Rate Limiter + Cache + History in a row  */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
 
               {/* Rate Limiter */}
@@ -401,7 +398,6 @@ export default function StatusPage() {
               </section>
             </div>
 
-            {/* ── Config reference ────────────────────────────────────── */}
             <section>
               <SectionTitle>System Configuration</SectionTitle>
               <Card>
@@ -435,7 +431,6 @@ export default function StatusPage() {
               </Card>
             </section>
 
-            {/* ── Last refresh ─────────────────────────────────────────── */}
             {lastRefresh && (
               <div style={{
                 textAlign: 'center',

@@ -9,9 +9,8 @@ import hashlib
 import time
 from llm_router import call_llm
 
-# Simple in-memory cache: { sql_hash: explanation_text }
 _cache: dict[str, str] = {}
-_CACHE_TTL = 60 * 60   # 1 hour
+_CACHE_TTL = 60 * 60  
 _cache_times: dict[str, float] = {}
 
 

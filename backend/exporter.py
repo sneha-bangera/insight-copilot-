@@ -16,9 +16,6 @@ from typing import Any
 import pandas as pd
 
 
-# ─────────────────────────────────────────
-# Excel export
-# ─────────────────────────────────────────
 
 def to_excel(
     question: str,
@@ -31,7 +28,6 @@ def to_excel(
 
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
-        # ── Data sheet ──────────────────────────────────────────────────
         df.to_excel(writer, sheet_name="Results", index=False, startrow=3)
 
         ws = writer.sheets["Results"]
@@ -64,7 +60,6 @@ def to_excel(
 
         # Row 3 — blank spacer (already used by startrow=3 offset)
 
-        # Style the header row (row 4 = startrow 3 + 1-indexed header)
         header_row = 4
         for col_idx, col_name in enumerate(columns, start=1):
             cell = ws.cell(row=header_row, column=col_idx)
@@ -79,7 +74,6 @@ def to_excel(
                 cell = ws.cell(row=row_idx, column=col_idx)
                 cell.alignment = ALIGN_LEFT
                 cell.border    = THIN_BORDER
-                # Zebra stripe
                 if (row_idx - header_row) % 2 == 0:
                     cell.fill = PatternFill("solid", fgColor="1A1A24")
 
@@ -97,7 +91,6 @@ def to_excel(
         ws.row_dimensions[1].height = 24
         ws.row_dimensions[2].height = 40
 
-        # ── Meta sheet ──────────────────────────────────────────────────
         meta_ws = writer.book.create_sheet("Info")
         meta_ws["A1"] = "Exported by"
         meta_ws["B1"] = "Insight Copilot"
@@ -116,9 +109,7 @@ def to_excel(
     return output.getvalue()
 
 
-# ─────────────────────────────────────────
-# PDF export
-# ─────────────────────────────────────────
+
 
 def to_pdf(
     question: str,
@@ -149,7 +140,6 @@ def to_pdf(
         topMargin=2*cm,  bottomMargin=2*cm,
     )
 
-    # ── Colors ──────────────────────────────────────────────────────────
     ACCENT    = colors.HexColor("#00D4AA")
     DARK_BG   = colors.HexColor("#111118")
     SURFACE   = colors.HexColor("#1A1A24")
@@ -204,7 +194,7 @@ def to_pdf(
     story.append(Paragraph(summary, summary_style))
     story.append(Spacer(1, 0.2*cm))
 
-    # SQL (truncated if very long)
+    # SQL
     sql_display = sql[:600] + "..." if len(sql) > 600 else sql
     story.append(Paragraph(f"SQL: {sql_display}", code_style))
     story.append(Spacer(1, 0.4*cm))
@@ -215,7 +205,7 @@ def to_pdf(
 
     if columns and display_rows:
         # Build table data
-        table_data = [columns]   # header row
+        table_data = [columns]  
         for row in display_rows:
             table_data.append([
                 _truncate(str(row.get(col, "")), 30)

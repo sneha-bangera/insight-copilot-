@@ -17,10 +17,8 @@ CACHE_TTL = 30 * 60
 # Max entries to prevent unbounded memory growth
 MAX_ENTRIES = 200
 
-# { cache_key: { "result": dict, "expires_at": float, "hits": int } }
 _store: dict[str, dict] = {}
 
-# Tracks current table fingerprint — changes on upload/delete
 _table_version: int = 0
 
 

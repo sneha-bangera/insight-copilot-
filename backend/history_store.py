@@ -22,9 +22,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# DB_PATH = os.path.join(os.path.dirname(__file__), "data", "history.db")
-DB_PATH = os.getenv("HISTORY_DB_PATH", "/data/history.db")
+# DB_PATH = os.getenv("HISTORY_DB_PATH", "/data/history.db")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+DATA_DIR = os.path.join(BASE_DIR, "data")
+os.makedirs(DATA_DIR, exist_ok=True)
+
+DB_PATH = os.getenv(
+    "HISTORY_DB_PATH",
+    os.path.join(DATA_DIR, "history.db")
+)
 
 def _get_conn() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH)
@@ -60,9 +67,7 @@ def init_db() -> None:
     conn.close()
 
 
-# ─────────────────────────────────────────
-# Save
-# ─────────────────────────────────────────
+
 
 def save(session_id: str, result: dict) -> int:
     """Persist a successful query result. Returns the new row id."""
@@ -116,9 +121,7 @@ def _prune(session_id: str, keep: int = 500) -> None:
     conn.close()
 
 
-# ─────────────────────────────────────────
-# Read
-# ─────────────────────────────────────────
+
 
 def _row_to_dict(row: sqlite3.Row) -> dict:
     d = dict(row)
@@ -172,9 +175,6 @@ def get_entry(entry_id: int) -> Optional[dict]:
     return _row_to_dict(row) if row else None
 
 
-# ─────────────────────────────────────────
-# Mutations
-# ─────────────────────────────────────────
 
 def toggle_bookmark(entry_id: int) -> dict:
     conn = _get_conn()

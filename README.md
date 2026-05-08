@@ -10,9 +10,9 @@
 
 | Service  | URL |
 |----------|-----|
-| Frontend | `https://your-app.vercel.app` |
-| Backend  | `https://your-api.railway.app` |
-| Status   | `https://your-app.vercel.app/status` |
+| Frontend | `https://insight-copilot-1o.vercel.app/` |
+| Backend  | `https://insight-copilot-1-o.onrender.com/api/status` |
+| Status   | `https://insight-copilot-1o.vercel.app/status` |
 
 > Replace with your actual URLs after deployment.
 
@@ -103,7 +103,7 @@ Type a question like *"Why did revenue drop in the North region last quarter?"* 
 | History | SQLite | Lightweight, zero config |
 | Cache | In-memory (Python dict) | TTL + table-version keying |
 | Frontend deploy | Vercel | Free, auto-deploys from GitHub |
-| Backend deploy | Railway | Free tier, env var support |
+| Backend deploy | Render | Free tier, env var support |
 
 ---
 
@@ -202,26 +202,43 @@ Open `http://localhost:3000`
 
 ## Deployment
 
-### Backend → Railway
+### Backend → Render
 
 1. Push your code to GitHub
-2. Go to [railway.app](https://railway.app) → New Project → Deploy from GitHub
-3. Select the `backend/` folder as root directory
-4. Add environment variables:
-   ```
+2. Go to [Render](https://render.com) → **New +** → **Web Service**
+3. Connect your GitHub repository
+4. Select the `backend/` folder as the root directory
+5. Configure the service:
+   - **Environment:** Python
+   - **Build Command:**
+     ```bash
+     pip install -r requirements.txt
+     ```
+   - **Start Command:**
+     ```bash
+     gunicorn app:app
+     ```
+6. Add environment variables:
+   ```env
    GROQ_API_KEY=your_key
    GEMINI_API_KEY=your_key
    ```
-5. Railway auto-detects Python and runs the `Procfile`
-6. Copy the generated Railway URL (e.g. `https://insight-copilot-api.railway.app`)
+7. Click **Deploy Web Service**
+8. Copy the generated Render URL  
+   Example:
+   ```txt
+   https://insight-copilot-api.onrender.com
+   ```
+
+---
 
 ### Frontend → Vercel
 
-1. Go to [vercel.com](https://vercel.com) → Import Project → select your repo
+1. Go to [Vercel](https://vercel.com) → **Import Project** → select your repo
 2. Set root directory to `frontend/`
 3. Add environment variable:
-   ```
-   NEXT_PUBLIC_API_URL=https://your-railway-url.railway.app
+   ```env
+   NEXT_PUBLIC_API_URL=https://your-render-url.onrender.com
    ```
 4. Deploy — Vercel gives you a live URL in ~60 seconds
 
@@ -261,7 +278,7 @@ insight-copilot/
 │   ├── exporter.py          # Excel + PDF export
 │   ├── explainer.py         # SQL explanation
 │   ├── seed_prod.py         # Production DB seeder
-│   ├── Procfile             # Railway start command
+│   ├── render.yaml          # Render              
 │   ├── requirements.txt
 │   └── data/
 │       └── sample.duckdb
@@ -290,7 +307,7 @@ insight-copilot/
 ```
 • Built a GenAI analytics copilot with NL-to-SQL pipeline using Gemini 2.5 Flash and
   Llama 3.1 70B, featuring round-robin LLM routing with automatic failover and 60s
-  health-based cooldown — deployed on Vercel + Railway
+  health-based cooldown — deployed on Vercel + Render
 
 • Engineered a schema-aware prompt injection system with single-call SQL + summary
   generation, SQL error retry loop, and 30-min TTL query cache — reducing avg API

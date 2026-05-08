@@ -21,9 +21,6 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "data", "sample.duckdb")
 SYSTEM_TABLES = {"sales", "regional_targets", "employees"}
 
 
-# ─────────────────────────────────────────
-# Helpers
-# ─────────────────────────────────────────
 
 def _sanitize_name(filename: str) -> str:
     """Turn a filename into a valid SQL table name."""
@@ -44,9 +41,6 @@ def _get_conn(read_only: bool = False) -> duckdb.DuckDBPyConnection:
     return duckdb.connect(DB_PATH, read_only=read_only)
 
 
-# ─────────────────────────────────────────
-# Upload
-# ─────────────────────────────────────────
 
 def upload_csv(file_bytes: bytes, filename: str) -> dict:
     """
@@ -94,9 +88,6 @@ def upload_csv(file_bytes: bytes, filename: str) -> dict:
     }
 
 
-# ─────────────────────────────────────────
-# List tables
-# ─────────────────────────────────────────
 
 def _describe_table(conn, table_name: str) -> list[dict]:
     rows = conn.execute(f"PRAGMA table_info('{table_name}')").fetchall()
@@ -122,10 +113,6 @@ def list_tables() -> list[dict]:
         conn.close()
 
 
-# ─────────────────────────────────────────
-# Drop table
-# ─────────────────────────────────────────
-
 def drop_table(table_name: str) -> dict:
     if table_name in SYSTEM_TABLES:
         raise ValueError(f"Cannot delete system table '{table_name}'.")
@@ -141,10 +128,6 @@ def drop_table(table_name: str) -> dict:
 
     return {"deleted": table_name}
 
-
-# ─────────────────────────────────────────
-# Join suggestion
-# ─────────────────────────────────────────
 
 def suggest_joins() -> list[dict]:
     """

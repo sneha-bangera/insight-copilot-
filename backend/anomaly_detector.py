@@ -69,7 +69,6 @@ def detect(columns: list[str], rows: list[dict[str, Any]]) -> list[str]:
         if mean == 0:
             continue
 
-        # ── Outlier detection (±2σ) ─────────────────────────────────────
         if std > 0:
             z_scores = (series - mean) / std
             outlier_mask = z_scores.abs() > 2.0
@@ -85,7 +84,6 @@ def detect(columns: list[str], rows: list[dict[str, Any]]) -> list[str]:
                         f"{z:.1f}× std {direction} the average ({_fmt(mean)})."
                     )
 
-        # ── Dominant value (>50% of total) ──────────────────────────────
         if total > 0 and label_col:
             max_val   = series.max()
             max_share = max_val / total
@@ -96,7 +94,6 @@ def detect(columns: list[str], rows: list[dict[str, Any]]) -> list[str]:
                     f"{max_share:.0%} of total {col}."
                 )
 
-        # ── Large top-to-bottom gap (>5×) ───────────────────────────────
         if series.min() > 0:
             ratio = series.max() / series.min()
             if ratio > 5 and label_col and len(series) >= 3:
@@ -107,7 +104,7 @@ def detect(columns: list[str], rows: list[dict[str, Any]]) -> list[str]:
                     f"{ratio:.1f}× higher than {bot_label}'s."
                 )
 
-        # ── Zeros in positive column ─────────────────────────────────────
+        #Zeros in positive column 
         if any(kw in col_lower for kw in _POSITIVE_COLS):
             zero_count = (series == 0).sum()
             if zero_count > 0 and label_col:
@@ -117,7 +114,7 @@ def detect(columns: list[str], rows: list[dict[str, Any]]) -> list[str]:
                     f"Zero values: {names} reported zero {col}."
                 )
 
-        # ── Negative values in positive column ──────────────────────────
+        #Negative values in positive column 
         if any(kw in col_lower for kw in _POSITIVE_COLS):
             neg = series[series < 0]
             if not neg.empty and label_col:
@@ -126,7 +123,6 @@ def detect(columns: list[str], rows: list[dict[str, Any]]) -> list[str]:
                     f"Unexpected negative: {neg_label} has negative {col} ({_fmt(neg.iloc[0])})."
                 )
 
-    # Cap to 3 most interesting observations to avoid noise
     return observations[:3]
 
 

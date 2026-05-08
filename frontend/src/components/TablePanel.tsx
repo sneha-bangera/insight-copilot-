@@ -71,7 +71,6 @@ export default function TablePanel({ onJoinSuggest, onTableChange }: Props) {
     }
   }
 
-  // ── styles ────────────────────────────────────────────────────────────────
   const mono  = 'var(--ic-font-mono)'
   const sans  = 'var(--ic-font-sans)'
   const muted = 'var(--ic-muted)'
@@ -83,7 +82,6 @@ export default function TablePanel({ onJoinSuggest, onTableChange }: Props) {
       fontFamily: sans,
     }}>
 
-      {/* ── Drop zone ──────────────────────────────────────────────────── */}
       <div
         onDragOver={e => { e.preventDefault(); setDragOver(true) }}
         onDragLeave={() => setDragOver(false)}
@@ -137,7 +135,6 @@ export default function TablePanel({ onJoinSuggest, onTableChange }: Props) {
         </div>
       )}
 
-      {/* ── Join suggestions ────────────────────────────────────────────── */}
       {joins.length > 0 && (
         <div style={{
           background: '#7c6af714', border: '1px solid #7c6af744',
@@ -173,7 +170,6 @@ export default function TablePanel({ onJoinSuggest, onTableChange }: Props) {
         </div>
       )}
 
-      {/* ── Table list ──────────────────────────────────────────────────── */}
       <div style={{ fontSize: 11, fontFamily: mono, color: muted, letterSpacing: '0.05em' }}>
         TABLES ({tables.length})
       </div>

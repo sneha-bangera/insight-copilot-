@@ -1,6 +1,5 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
-// ─── Types ───────────────────────────────────────────────────────────────────
 
 export interface QueryResponse {
   question:          string
@@ -53,7 +52,7 @@ export interface TableInfo       { table_name: string; row_count: number; column
 export interface TablesResponse  { tables: TableInfo[]; join_suggestions: JoinSuggestion[] }
 export interface UploadResponse extends TableInfo { join_suggestions: JoinSuggestion[] }
 
-// ─── Error handler ───────────────────────────────────────────────────────────
+//  Error handler 
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (res.ok) return res.json() as Promise<T>
@@ -66,7 +65,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
   throw err
 }
 
-// ─── Query ───────────────────────────────────────────────────────────────────
+//  Query 
 
 export async function askQuestion(question: string, sessionId: string): Promise<QueryResponse> {
   const res = await fetch(`${API_URL}/api/query`, {
@@ -85,7 +84,7 @@ export async function clearSession(sessionId: string): Promise<void> {
   })
 }
 
-// ─── History ─────────────────────────────────────────────────────────────────
+//  History 
 
 export async function fetchHistory(
   sessionId: string,
@@ -116,14 +115,14 @@ export async function deleteHistoryEntry(entryId: number): Promise<void> {
   return handleResponse<void>(res)
 }
 
-// ─── Dashboard ───────────────────────────────────────────────────────────────
+//  Dashboard 
 
 export async function fetchDashboard(): Promise<{ pinned: HistoryEntry[] }> {
   const res = await fetch(`${API_URL}/api/dashboard`)
   return handleResponse<{ pinned: HistoryEntry[] }>(res)
 }
 
-// ─── Tables ──────────────────────────────────────────────────────────────────
+//  Tables 
 
 export async function fetchTables(): Promise<TablesResponse> {
   const res = await fetch(`${API_URL}/api/tables`)
