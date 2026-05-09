@@ -5,7 +5,7 @@ import "./globals.css";
 
 const playwriteAUQLD = Playwrite_AU_QLD({
   variable: "--font-heading",
-  subsets: ["latin"],
+  // subsets: ["latin"],
 });
 
 const montserrat = Montserrat({
