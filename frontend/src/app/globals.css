@@ -134,17 +134,35 @@
 
 /* Insight Copilot custom tokens */
 :root {
+  --ic-bg: #ffffff;
+  --ic-surface: #f8f8f8;
+  --ic-surface2: #e8e8e8;
+  --ic-border: #d0d0d0;
+  --ic-accent: #f08080;
+  --ic-accent2: #7c6af7;
+  --ic-text: #2D2D2D;
+  --ic-muted: #6b6b80;
+  --ic-danger: #ff4d6d;
+  --ic-font-mono: 'IBM Plex Mono', monospace;
+  --ic-font-sans: 'Montserrat', sans-serif;
+  --ic-heading-color: #f08080;
+  --ic-text-shadow: 1px 1px 2px #2D2D2D;
+}
+
+.dark {
   --ic-bg: #0a0a0f;
   --ic-surface: #111118;
   --ic-surface2: #1a1a24;
   --ic-border: #2a2a3a;
-  --ic-accent: #00d4aa;
+  --ic-accent: #E07A7A;
   --ic-accent2: #7c6af7;
-  --ic-text: #e8e8f0;
+  --ic-text: #F5F5F5;
   --ic-muted: #6b6b80;
   --ic-danger: #ff4d6d;
   --ic-font-mono: 'IBM Plex Mono', monospace;
-  --ic-font-sans: 'IBM Plex Sans', sans-serif;
+  --ic-font-sans: 'Montserrat', sans-serif;
+  --ic-heading-color: #E07A7A;
+  --ic-text-shadow: 1px 1px 2px #F5F5F5;
 }
 
 
@@ -153,6 +171,22 @@ html, body {
   color: var(--ic-text);
   height: 100%;
   overflow: hidden;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.dark html, .dark body {
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.05) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--ic-heading-color);
+  text-shadow: var(--ic-text-shadow);
 }
 
 ::-webkit-scrollbar { width: 4px; }

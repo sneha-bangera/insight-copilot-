@@ -54,7 +54,7 @@ interface StatusData {
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontFamily: 'var(--ic-font-mono)', fontSize: 10,
+      fontFamily: 'var(--ic-sans)', fontSize: 10,
       color: 'var(--ic-muted)', letterSpacing: '0.08em',
       marginBottom: 12, textTransform: 'uppercase',
     }}>{children}</div>
@@ -130,10 +130,10 @@ function ProviderCard({ provider, isNext }: { provider: ProviderInfo; isNext: bo
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <PulsingDot color={statusColor} />
           <div>
-            <div style={{ fontFamily: 'var(--ic-font-mono)', fontWeight: 600, fontSize: 15, color: 'var(--ic-text)' }}>
+            <div style={{ fontFamily: 'var(--ic-font-sans)', fontWeight: 600, fontSize: 15, color: 'var(--ic-text)' }}>
               {provider.name}
             </div>
-            <div style={{ fontFamily: 'var(--ic-font-mono)', fontSize: 10, color: 'var(--ic-muted)' }}>
+            <div style={{ fontFamily: 'var(--ic-font-sans)', fontSize: 10, color: 'var(--ic-muted)' }}>
               {provider.model}
             </div>
           </div>
@@ -244,18 +244,18 @@ export default function StatusPage() {
           <button onClick={() => router.push('/')} style={{
             background: 'none', border: '1px solid var(--ic-border)',
             borderRadius: 6, padding: '5px 12px',
-            fontFamily: 'var(--ic-font-mono)', fontSize: 12,
+            fontFamily: 'var(--ic-sans)', fontSize: 12,
             color: 'var(--ic-muted)', cursor: 'pointer',
           }}>← back</button>
 
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ fontFamily: 'var(--ic-font-mono)', fontWeight: 600, fontSize: 16 }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: 16 }}>
                 System Status
               </div>
               {!loading && data && (
                 <span style={{
-                  fontFamily: 'var(--ic-font-mono)', fontSize: 11,
+                  fontFamily: 'var(--ic-sans)', fontSize: 11,
                   color: allHealthy ? 'var(--ic-accent)' : 'var(--ic-danger)',
                   background: allHealthy ? '#00d4aa18' : '#ff4d6d18',
                   padding: '2px 10px', borderRadius: 20,
@@ -264,7 +264,7 @@ export default function StatusPage() {
                 </span>
               )}
             </div>
-            <div style={{ fontFamily: 'var(--ic-font-mono)', fontSize: 11, color: 'var(--ic-muted)', marginTop: 2 }}>
+            <div style={{ fontFamily: 'var(--ic-sans)', fontSize: 11, color: 'var(--ic-muted)', marginTop: 2 }}>
               Insight Copilot · observability dashboard
             </div>
           </div>
@@ -281,7 +281,7 @@ export default function StatusPage() {
             style={{
               background: 'none', border: '1px solid var(--ic-border)',
               borderRadius: 6, padding: '5px 12px',
-              fontFamily: 'var(--ic-font-mono)', fontSize: 12,
+              fontFamily: 'var(--ic-sans)', fontSize: 12,
               color: 'var(--ic-muted)', cursor: 'pointer',
             }}
           >↻ refresh</button>
@@ -301,7 +301,7 @@ export default function StatusPage() {
           <div style={{
             background: '#ff4d6d14', border: '1px solid #ff4d6d44',
             borderRadius: 10, padding: '20px 24px', marginBottom: 24,
-            fontFamily: 'var(--ic-font-mono)', fontSize: 13, color: 'var(--ic-danger)',
+            fontFamily: 'var(--ic-font-sans)', fontSize: 13, color: 'var(--ic-danger)',
             display: 'flex', gap: 10, alignItems: 'flex-start',
           }}>
             <span>🔌</span>
@@ -330,7 +330,7 @@ export default function StatusPage() {
                 ))}
               </div>
               <div style={{
-                marginTop: 12, fontFamily: 'var(--ic-font-mono)', fontSize: 11, color: 'var(--ic-muted)',
+                marginTop: 12, fontFamily: 'var(--ic-font-sans)', fontSize: 11, color: 'var(--ic-muted)',
                 display: 'flex', gap: 16,
               }}>
                 <span>Cooldown: {data.config.cooldown_seconds}s</span>
@@ -353,7 +353,7 @@ export default function StatusPage() {
                   <StatRow label="Remaining"     value={data.session_rate_limit.remaining}  valueColor={data.session_rate_limit.remaining < 3 ? '#f5a623' : 'var(--ic-accent)'} />
                   <StatRow label="Window"        value={`${data.session_rate_limit.window_seconds}s sliding`} />
                   <div style={{ marginTop: 4 }}>
-                    <div style={{ fontFamily: 'var(--ic-font-mono)', fontSize: 10, color: 'var(--ic-muted)', marginBottom: 4 }}>
+                    <div style={{ fontFamily: 'var(--ic-font-sans)', fontSize: 10, color: 'var(--ic-muted)', marginBottom: 4 }}>
                       USAGE
                     </div>
                     <ProgressBar
@@ -374,7 +374,7 @@ export default function StatusPage() {
                   <StatRow label="Total cache hits" value={data.cache.total_hits.toLocaleString()} valueColor={data.cache.total_hits > 0 ? 'var(--ic-accent)' : 'var(--ic-text)'} />
                   <StatRow label="TTL"              value={`${data.cache.ttl_seconds / 60} min`} />
                   <div style={{ marginTop: 4 }}>
-                    <div style={{ fontFamily: 'var(--ic-font-mono)', fontSize: 10, color: 'var(--ic-muted)', marginBottom: 4 }}>
+                    <div style={{ fontFamily: 'var(--ic-font-sans)', fontSize: 10, color: 'var(--ic-muted)', marginBottom: 4 }}>
                       FILL ({data.cache.total_entries} / {data.cache.max_entries})
                     </div>
                     <ProgressBar
@@ -419,10 +419,10 @@ export default function StatusPage() {
                       border: '1px solid var(--ic-border)',
                       borderRadius: 8, padding: '12px 14px',
                     }}>
-                      <div style={{ fontFamily: 'var(--ic-font-mono)', fontSize: 10, color: 'var(--ic-muted)', marginBottom: 6 }}>
+                      <div style={{ fontFamily: 'var(--ic-font-sans)', fontSize: 10, color: 'var(--ic-muted)', marginBottom: 6 }}>
                         {item.label.toUpperCase()}
                       </div>
-                      <div style={{ fontFamily: 'var(--ic-font-mono)', fontSize: 18, fontWeight: 600, color: 'var(--ic-text)' }}>
+                      <div style={{ fontFamily: 'var(--ic-font-sans)', fontSize: 18, fontWeight: 600, color: 'var(--ic-text)' }}>
                         {item.value}
                       </div>
                     </div>

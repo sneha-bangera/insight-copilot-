@@ -2,6 +2,7 @@
 'use client'
 import { useState, useRef, useEffect, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useTheme } from 'next-themes'
 import { askQuestion, clearSession, QueryResponse } from '@/lib/api'
 import ChartDisplay from '@/components/ChartDisplay'
 import SqlExplainer from '@/components/SqlExplainer'
@@ -53,6 +54,7 @@ function Badge({ children, color = 'var(--ic-muted)' }: { children: React.ReactN
 function HomeInner() {
   const router       = useRouter()
   const searchParams = useSearchParams()
+  const { theme, setTheme } = useTheme()
 
   const [messages,     setMessages]     = useState<Message[]>([])
   const [input,        setInput]        = useState('')
@@ -139,21 +141,26 @@ function HomeInner() {
           <button onClick={() => setSidebarOpen(o => !o)} title="Toggle panel" style={{
             background: sidebarOpen ? 'var(--ic-surface2)' : 'none',
             border: '1px solid var(--ic-border)', borderRadius: 6, padding: '5px 9px',
-            color: 'var(--ic-muted)', cursor: 'pointer', fontSize: 14,
+            color: 'var(--ic-accent)', cursor: 'pointer', fontSize: 14,
           }}>⊞</button>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{
+            {/* <div style={{
               width: 30, height: 30, borderRadius: 8, background: 'var(--ic-accent)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontFamily: 'var(--ic-font-mono)', fontWeight: 600, color: '#0a0a0f', fontSize: 13,
-            }}>IC</div>
+            }}>IC</div> */}
             <div>
-              <div style={{ fontFamily: 'var(--ic-font-mono)', fontWeight: 600, fontSize: 14 }}>Insight Copilot</div>
-              <div style={{ fontFamily: 'var(--ic-font-mono)', fontSize: 10, color: 'var(--ic-muted)' }}>NL → SQL → insights</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: 14 }}>Insight Copilot</div>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: 'var(--ic-muted)' }}>NL → SQL → insights</div>
             </div>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title="Toggle theme" style={{
+            background: 'none', border: '1px solid var(--ic-border)',
+            borderRadius: 6, padding: '5px 9px',
+            color: 'var(--ic-muted)', cursor: 'pointer', fontSize: 14,
+          }}>{theme === 'dark' ? '☀️' : '🌙'}</button>
           <button onClick={() => router.push('/dashboard')} style={{
             background: 'none', border: '1px solid var(--ic-border)',
             borderRadius: 6, padding: '5px 12px',
@@ -240,7 +247,7 @@ function HomeInner() {
           <div style={{ flex: 1, overflowY: 'auto', padding: '24px 0' }}>
             {messages.length === 0 ? (
               <div style={{ maxWidth: 640, margin: '40px auto', padding: '0 24px' }}>
-                <h1 style={{ fontFamily: 'var(--ic-font-mono)', fontSize: 26, fontWeight: 600, lineHeight: 1.3, marginBottom: 10 }}>
+                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 26, fontWeight: 600, lineHeight: 1.3, marginBottom: 10 }}>
                   Ask your data anything.
                 </h1>
                 <p style={{ fontFamily: 'var(--ic-font-sans)', fontSize: 14, color: 'var(--ic-muted)', marginBottom: 28, lineHeight: 1.6, fontWeight: 300 }}>

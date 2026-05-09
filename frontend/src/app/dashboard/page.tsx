@@ -43,21 +43,21 @@ export default function DashboardPage() {
             style={{
               background: 'none', border: '1px solid var(--ic-border)',
               borderRadius: 6, padding: '5px 12px',
-              fontFamily: 'var(--ic-font-mono)', fontSize: 12,
+              fontFamily: 'var(--ic-sans)', fontSize: 12,
               color: 'var(--ic-muted)', cursor: 'pointer',
             }}
           >← back</button>
           <div>
-            <div style={{ fontFamily: 'var(--ic-font-mono)', fontWeight: 600, fontSize: 16 }}>
+            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: 16 }}>
               Dashboard
             </div>
-            <div style={{ fontFamily: 'var(--ic-font-mono)', fontSize: 11, color: 'var(--ic-muted)' }}>
+            <div style={{ fontFamily: 'var(--ic-sans)', fontSize: 11, color: 'var(--ic-muted)' }}>
               Pinned insights
             </div>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontFamily: 'var(--ic-font-mono)', fontSize: 12, color: 'var(--ic-muted)' }}>
+          <span style={{ fontFamily: 'var(--ic-sans)', fontSize: 12, color: 'var(--ic-muted)' }}>
             {cards.length} card{cards.length !== 1 ? 's' : ''}
           </span>
           <button
@@ -65,7 +65,7 @@ export default function DashboardPage() {
             style={{
               background: 'none', border: '1px solid var(--ic-border)',
               borderRadius: 6, padding: '5px 12px',
-              fontFamily: 'var(--ic-font-mono)', fontSize: 12,
+              fontFamily: 'var(--ic-sans)', fontSize: 12,
               color: 'var(--ic-muted)', cursor: 'pointer',
             }}
           >↻ refresh</button>
@@ -88,7 +88,7 @@ export default function DashboardPage() {
           }}>
             <div style={{ fontSize: 40, marginBottom: 16 }}>📌</div>
             <div style={{
-              fontFamily: 'var(--ic-font-mono)', fontSize: 16,
+              fontFamily: 'var(--ic-font-sans)', fontSize: 16,
               fontWeight: 600, marginBottom: 10,
             }}>
               No pinned insights yet
@@ -105,7 +105,7 @@ export default function DashboardPage() {
               style={{
                 background: 'var(--ic-accent)', border: 'none',
                 borderRadius: 8, padding: '10px 24px',
-                fontFamily: 'var(--ic-font-mono)', fontSize: 13,
+                fontFamily: 'var(--ic-font-sans)', fontSize: 13,
                 fontWeight: 600, color: '#0a0a0f', cursor: 'pointer',
               }}
             >Go ask a question →</button>
