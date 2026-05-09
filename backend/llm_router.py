@@ -71,7 +71,7 @@ _PROVIDERS: list[Provider] = [
     Provider(
         name="Groq",
         client_type="groq",
-        model="llama-3.1-70b-versatile",
+        model="llama-3.3-70b-versatile",
         api_key_env="GROQ_API_KEY",
     ),
     Provider(
