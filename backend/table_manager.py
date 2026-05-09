@@ -15,7 +15,14 @@ import duckdb
 import pandas as pd
 from typing import Optional
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "data", "sample.duckdb")
+# DB_PATH = os.path.join(os.path.dirname(__file__), "data", "sample.duckdb")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+DB_PATH = os.getenv(
+    "DATA_PATH",
+    os.path.join(BASE_DIR, "data", "sample.duckdb")
+)
+
 
 # Tables that ship with the app — never allow deleting these
 SYSTEM_TABLES = {"sales", "regional_targets", "employees"}
