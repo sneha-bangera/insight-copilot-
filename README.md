@@ -1,3 +1,9 @@
+
+
+https://github.com/user-attachments/assets/54dd73e8-bf83-41b7-a33e-0a3179ee21d4
+
+
+
 # 🚀 Insight Copilot
 
 **Ask business questions in plain English. Get SQL, charts, and insights — instantly.**
