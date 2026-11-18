@@ -20,7 +20,6 @@ https://github.com/user-attachments/assets/54dd73e8-bf83-41b7-a33e-0a3179ee21d4
 | Backend  | `https://insight-copilot-1-o.onrender.com/api/status` |
 | Status   | `https://insight-copilot-1o.vercel.app/status` |
 
-> Replace with your actual URLs after deployment.
 
 ---
 
